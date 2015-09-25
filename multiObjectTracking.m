@@ -72,6 +72,7 @@ if(false)
    fprintf('Connection to server NOT established.\nProgram terminated\n');
 else
    fopen(serverObj);
+   set(serverObj,'Terminator',38); %&
    % Detect moving objects, and track them across video frames.
    while (1)
       frame = readFrame();
@@ -534,7 +535,18 @@ end
             %fwrite(serverObj, output);
             %fwrite(serverObj,'&');
     end
-
+%% Read data from the buffer
+% this will return a cell array of strings read form the socket
+% will be empty if there is no data to be read
+function [objects] = readDataFromServer()
+  objects = {};
+  while (serverObj.BytesAvailable > 0)
+  % we have data we want
+  object = fscanf(serverObj)];
+  objects = [objects, object];
+  end
+  
+end
 %% Summary
 % This is a motion-based system for detecting and 
 % tracking multiple moving objects. 
